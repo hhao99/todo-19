@@ -1,22 +1,29 @@
-import React, { useContext, useState } from 'react'
+import { 
+    useContext, 
+    // useState,
+    useActionState,
+} from 'react'
 import TodoContext from './todoContext'
-function AddTodo(){
-    const [title, setTitle] = useState('')
-    const { dispatch } = useContext(TodoContext)
 
-    const onAdd = (e)=> {
-        e.preventDefault()
-        console.log('Add todo:', title)
+
+function AddTodo(){
+    const { dispatch } = useContext(TodoContext)
+    const AddAction = async (preState, formData) => {
+        const title = formData.get('title').trim()
         dispatch({ type: 'ADD_TODO', payload: { title } })
-        setTitle('') // Clear input after adding
+        return { success: true, message: 'Todo added successfully' }
     }
+
+    const [state, formAction] = useActionState(AddAction, {success: false, message: ''})
+
     return (
 
         <>
             <h1>Add new Todo</h1>
-            <form onSubmit={onAdd}>
-                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <form action={formAction}>
+                <input type="text" id="title" name="title"/>
                 <button type="submit">Add</button>
+                <p>{state.message}</p>
             </form>
         </>
     )
