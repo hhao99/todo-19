@@ -8,13 +8,13 @@ function TodoList() {
     return (
         <>
             <h1>Todo List</h1>
-            <ul>
+            <ul className="list-none p-0 mb-4">
                 {list.map(todo => (
-                    <li key={todo.id}>
-                        <TodoItem todo={todo} />
-                    </li>
+                    <TodoItem todo={todo} key={todo.id} />
                 ))}
             </ul>
+
+            <h3 className="text-sm text-gray-500 text-right">Total Todos: {state.count}</h3>
         </>
     )
 }
