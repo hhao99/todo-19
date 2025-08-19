@@ -11,22 +11,23 @@ function AddTodo(){
     const AddAction = async (preState, formData) => {
         const title = formData.get('title').trim()
         if(title.length <=4) return { success: false, message: 'Title is too short' }
+        await new Promise(resolve => setTimeout(resolve, 500)) // Simulate network delay
         dispatch({ type: 'ADD_TODO', payload: { title } })
         return { success: true, message: 'Todo added successfully' }
     }
 
-    const [state, formAction] = useActionState(AddAction, {success: false, message: ''})
+    const [result, formAction, isPending] = useActionState(AddAction, {success: false, message: ''})
 
     return (
 
         <div className='mb-4'>
             <form action={formAction}>
                 <label htmlFor="title">
-                    What do you want to do?:
-                    <input className="border border-gray-300 p-2 rounded" 
+                   {isPending? "Adding...": "What do you want to do?"}
+                    <input className="border border-gray-300 p-2 rounded" disabled={isPending}
                         type="text" id="title" name="title" placeholder='new todo'/>
                 </label>
-                <p className={state.success ? 'text-green-600' : 'text-red-500'}>{state.message}</p>
+                <p className={result.success ? 'text-green-600' : 'text-red-500'}>{result.message}</p>
             </form>
         </div>
     )
